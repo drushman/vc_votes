@@ -1,7 +1,5 @@
 <?php
 
-define('VC_VOTE_PATH_ADD', 'vc-votes/%/%/%_vc_votes_entity/%');
-
 /**
  * Implement hook_menu().
  */
@@ -61,9 +59,6 @@ function _vc_votes_entity_load($entity, $entity_type) {
     drupal_set_message('The entity is uncorrect.', 'error');
     return '';
   }
-//  kpr(debug_backtrace());
-//  kpr('callback');
-//  exit;
   return reset(entity_load($entity_type, array($entity), array(), TRUE));
 }
 
@@ -74,8 +69,8 @@ function vc_votes_votingapi_relationships() {
     'entity_type' => 'user',
     'base_table' => 'users',
     'entity_id_column' => 'uid',
-    'pseudo_vote' => 'votingapi_vote',    // for legacy compatability w/RC1.
-    'pseudo_cache' => 'votingapi_cache',  // for legacy compatability w/RC1.
+    'pseudo_vote' => 'votingapi_vote',   
+    'pseudo_cache' => 'votingapi_cache', 
   );
   return $default_relationships;
 }
