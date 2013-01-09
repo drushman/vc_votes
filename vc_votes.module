@@ -1,0 +1,79 @@
+<?php
+
+define('VC_VOTE_PATH_ADD', 'vc-votes/%/%/%vc_votes_entity/%');
+
+/**
+ * Implement hook_menu().
+ */
+function vc_votes_menu() {
+  $items['vc-votes/%/%/%vc_votes_entity/%'] = array(
+    'title' => 'Add votes',
+    'description' => 'Add votes.',
+    'page callback' => 'vc_votes_add',
+    'page arguments' => array(1, 2, 3, 4),
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'load arguments' => array(2), 
+  );
+  return $items;
+}
+
+/**
+ * Menu callback
+ */
+function vc_votes_add($flag_id, $entity_type, $entity, $value) {
+  if (!$entity) {
+    drupal_set_message('Entity not exist.', 'error');
+    return '';
+  }
+  $value = (int)$value;
+  if (!is_numeric($value)) {
+    drupal_set_message('The value is uncorrect.', 'error');
+    return '';
+  }
+  
+  $info = entity_get_info($entity_type);
+  $key  = $info['entity keys']['id'];
+  
+  $votes = array(
+    'entity_type' => $entity_type,
+    'entity_id' => $entity->{$key},
+    'value_type' => 'option',
+    'value' => $value,
+    'tag' => $flag_id,
+  );
+  
+  $criteria = NULL;
+  votingapi_set_votes($votes, $criteria);
+  return '';
+}
+
+/**
+ * Load arguments
+ */
+function vc_votes_entity_load($entity, $entity_type) {
+  if (!entity_get_info($entity_type)) {
+    drupal_set_message('Entity type not found', 'error');
+    return '';
+  }
+  $entity = (int)$entity;
+  if (!is_numeric($entity)) {
+    drupal_set_message('The entity is uncorrect.', 'error');
+    return '';
+  }
+//  kpr('callback');exit;
+  return reset(entity_load($entity_type, array($entity), array(), TRUE));
+}
+
+
+function vc_votes_votingapi_relationships() {
+//  $default_relationships[] = array(
+//    'description' => t('user'),
+//    'entity_type' => 'user',
+//    'base_table' => 'users',
+//    'entity_id_column' => 'uid',
+//    'pseudo_vote' => 'votingapi_vote',    // for legacy compatability w/RC1.
+//    'pseudo_cache' => 'votingapi_cache',  // for legacy compatability w/RC1.
+//  );
+//  return $default_relationships;
+}

@@ -1,0 +1,7 @@
+name = Custom Votes
+description = Flexible voting options for entity
+core = 7.x
+package = "Viet Coop"
+dependencies[] = votingapi
+dependencies[] = entity
+
